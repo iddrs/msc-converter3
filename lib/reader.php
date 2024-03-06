@@ -13,7 +13,7 @@ function load_source_csv(string $filePath): array {
 }
 
 function parse_remessa_to_filepath(string $mscOutputBaseDir, int $remessa): string {
-    $mes = (int) substr($remessa, -1, 2);
+    $mes = (int) substr($remessa, 4, 2);
     $ano = substr($remessa, 0, 4);
     
     $meses = [
