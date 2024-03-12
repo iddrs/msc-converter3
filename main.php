@@ -5,7 +5,7 @@
 
 
 // Pega dados do usuário
-echo "Conversão dos TXT do PAD.", PHP_EOL;
+echo "Conversão do CSV da MSC.", PHP_EOL;
 echo "Digite os dados solicitados.", PHP_EOL;
 
 echo "Ano [AAAA]: ";
@@ -52,15 +52,13 @@ echo 'Escrevendo tabela temporária...'.PHP_EOL;
 begin_transaction($con);
 echo 'Transação iniciada.'.PHP_EOL;
 
-$contador = 0;
+$progressBar = new \NickBeen\ProgressBar\ProgressBar(maxProgress: sizeof($msc));
+$progressBar->start();
 foreach ($msc as $row) {
     write_tmp($con, $row);
-    $contador++;
-    if($contador % 1000 == 0) {
-        printf('Escritas %d linhas...'.PHP_EOL, $contador);
-    }
+    $progressBar->tick();
 }
-printf('Escritas %d linhas...'.PHP_EOL, $contador);
+$progressBar->finish();
 
 echo 'Salvando dados temporários...'.PHP_EOL;
 commit($con);
@@ -72,16 +70,13 @@ printf('Linhas consolidadas: %d'.PHP_EOL, sizeof($msc));
 
 begin_transaction($con);
 echo 'Transação iniciada.'.PHP_EOL;
-
-$contador = 0;
+$progressBar = new \NickBeen\ProgressBar\ProgressBar(maxProgress: sizeof($msc));
+$progressBar->start();
 foreach ($msc as $row) {
     write_row($con, $row);
-    $contador++;
-    if($contador % 1000 == 0) {
-        printf('Escritas %d linhas...'.PHP_EOL, $contador);
-    }
+    $progressBar->tick();
 }
-printf('Escritas %d linhas...'.PHP_EOL, $contador);
+$progressBar->finish();
 
 echo 'Finalizando remessa...'.PHP_EOL;
 finalize($con, $remessa);

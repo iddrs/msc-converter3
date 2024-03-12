@@ -14,5 +14,8 @@
             "lib/writer.php",
             "lib/converter.php"
         ]
+    },
+    "require": {
+        "nickbeen/php-cli-progress-bar": "^1.1"
     }
 }
