@@ -33,18 +33,15 @@ printf('Linhas carregadas: %d'.PHP_EOL, sizeof($data));
 
 
 echo 'Convertendo linhas...'.PHP_EOL;
-$contador = 0;
+$progressBar = new \NickBeen\ProgressBar\ProgressBar(maxProgress: sizeof($data));
+$progressBar->start();
 $msc = [];
 foreach ($data as $line) {
     $row = line_to_row($line);
     $msc[] = $row;
-    
-    $contador++;
-    if($contador % 1000 == 0) {
-        printf('Convertidas %d linhas...'.PHP_EOL, $contador);
-    }
+    $progressBar->tick();
 }
-
+$progressBar->finish();
 printf('Linhas convertidas: %d'.PHP_EOL, sizeof($msc));
 
 
@@ -52,6 +49,13 @@ echo 'Escrevendo tabela temporária...'.PHP_EOL;
 begin_transaction($con);
 echo 'Transação iniciada.'.PHP_EOL;
 
+echo 'Limpando tabela temporária...'.PHP_EOL;
+if (!pg_query($con, "DELETE FROM tmp.msc")) {
+    $error = pg_last_error($con);
+    trigger_error("Falha ao limpar tmp.msc: {$error}", E_USER_ERROR);
+}
+
+echo 'Escrevendo dados na tabela temporária...'.PHP_EOL;
 $progressBar = new \NickBeen\ProgressBar\ProgressBar(maxProgress: sizeof($msc));
 $progressBar->start();
 foreach ($msc as $row) {
