@@ -13,8 +13,8 @@ fscanf(STDIN, "%d\n", $ano);
 echo "Mês [MM] (1 ~ 13): ";
 fscanf(STDIN, "%d\n", $mes);
 $mes = str_pad($mes, 2, '0', STR_PAD_LEFT);
-
 $remessa = (int) $ano.$mes;
+
 
 // Configurações
 $msc_output_base_dir = 'Z:\\MSC\\';
